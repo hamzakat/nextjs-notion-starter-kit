@@ -210,7 +210,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
     dynamicConfig.description
 
   const footer = React.useMemo(
-    () => <Footer config={dynamicConfig} />, // TODO: build the Footer component using prop-type before using React.memo
+    () => <Footer config={dynamicConfig} />,
     [dynamicConfig]
   )
 
