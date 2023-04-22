@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import cs from 'classnames'
+import { useDynamicConfig } from 'contexts/DynamicConfig'
 import { PageBlock } from 'notion-types'
 import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
 import BodyClassName from 'react-body-classname'
@@ -20,7 +21,7 @@ import { searchNotion } from '@/lib/search-notion'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import { Footer } from './Footer'
-import { GitHubShareButton } from './GitHubShareButton'
+// import { GitHubShareButton } from './GitHubShareButton'
 import { Loading } from './Loading'
 import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
@@ -146,7 +147,8 @@ export const NotionPage: React.FC<types.PageProps> = ({
   site,
   recordMap,
   error,
-  pageId
+  pageId,
+  indexPage
 }) => {
   const router = useRouter()
   const lite = useSearchParam('lite')
@@ -200,7 +202,17 @@ export const NotionPage: React.FC<types.PageProps> = ({
     [block, recordMap, isBlogPost]
   )
 
-  const footer = React.useMemo(() => <Footer />, [])
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { dynamicConfig } = useDynamicConfig()
+
+  const socialDescription =
+    getPageProperty<string>('Description', block, recordMap) ||
+    dynamicConfig.description
+
+  const footer = React.useMemo(
+    () => <Footer config={dynamicConfig} />, // TODO: build the Footer component using prop-type before using React.memo
+    [dynamicConfig]
+  )
 
   if (router.isFallback) {
     return <Loading />
@@ -238,10 +250,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
     block
   )
 
-  const socialDescription =
-    getPageProperty<string>('Description', block, recordMap) ||
-    config.description
-
   return (
     <>
       <PageHead
@@ -257,10 +265,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
       {isDarkMode && <BodyClassName className='dark-mode' />}
 
       <NotionRenderer
-        bodyClassName={cs(
-          styles.notion,
-          pageId === site.rootNotionPageId && 'index-page'
-        )}
+        bodyClassName={cs(styles.notion, indexPage && 'index-page')}
         darkMode={isDarkMode}
         components={components}
         recordMap={recordMap}
@@ -281,7 +286,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
         footer={footer}
       />
 
-      <GitHubShareButton />
+      {/* <GitHubShareButton /> */}
     </>
   )
 }

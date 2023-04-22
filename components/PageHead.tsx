@@ -1,7 +1,9 @@
 import * as React from 'react'
 import Head from 'next/head'
 
-import * as config from '@/lib/config'
+import { useDynamicConfig } from 'contexts/DynamicConfig'
+
+// import * as config from '@/lib/config'
 import * as types from '@/lib/types'
 import { getSocialImageUrl } from '@/lib/get-social-image-url'
 
@@ -13,6 +15,12 @@ export const PageHead: React.FC<
     url?: string
   }
 > = ({ site, title, description, pageId, image, url }) => {
+  const { dynamicConfig } = useDynamicConfig()
+  const config = {
+    ...dynamicConfig,
+    host: `https://${dynamicConfig.domain}`
+  }
+
   const rssFeedUrl = `${config.host}/feed`
 
   title = title ?? site?.name
