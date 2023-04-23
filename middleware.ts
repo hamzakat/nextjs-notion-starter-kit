@@ -29,12 +29,12 @@ export default async function middleware(req: NextRequest) {
   const rootNotionPageId = req.headers.get('root-notion-page-id')
 
   if (domain && rootNotionPageId) {
-    console.log('headers included', domain)
+    console.log('headers included', req.headers)
     return NextResponse.rewrite(new URL(path, url), {
       headers: req.headers
     })
   } else {
-    console.log('no headers included')
+    console.log('no headers included', req.headers)
 
     return NextResponse.rewrite(new URL('/404', url))
   }
