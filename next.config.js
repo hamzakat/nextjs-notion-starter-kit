@@ -18,5 +18,6 @@ module.exports = withBundleAnalyzer({
     formats: ['image/avif', 'image/webp'],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;"
-  }
+  },
+  assetPrefix: process.env.VERCEL_URL // it is necessary to load the assets in case we do a rewrite() request from another next.js app
 })
