@@ -43,3 +43,9 @@ body {
 .breadcrumb .title {
   margin-right: 7px;
 }
+
+
+/* hide "TABLE OF CONTENT" title  */
+.notion-aside-table-of-contents-header {
+  display: none;
+}
